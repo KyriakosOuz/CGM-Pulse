@@ -3,6 +3,7 @@
  */
 import { useState } from "react";
 import { saveKPITargets } from "../../api/client";
+import OfflineTooltip from "../Shared/OfflineTooltip";
 
 const DEFAULTS = { cpc: "5.00", ctr: "0.65", cpl: "120.00", conv_rate: "1.00" };
 
@@ -69,10 +70,12 @@ export default function KPITargets({ targets, onTargetsChange }) {
       </div>
 
       <div className="flex items-center gap-3 pt-1">
-        <button onClick={handleSave} disabled={saving}
-          className="px-5 py-2.5 bg-gradient-to-br from-primary to-primary-container text-on-primary-container rounded-xl text-sm font-semibold disabled:opacity-50">
-          {saving ? "Saving..." : "Save Targets"}
-        </button>
+        <OfflineTooltip message="Backend paused — saving targets unavailable.">
+          <button onClick={handleSave} disabled={saving}
+            className="px-5 py-2.5 bg-gradient-to-br from-primary to-primary-container text-on-primary-container rounded-xl text-sm font-semibold disabled:opacity-50">
+            {saving ? "Saving..." : "Save Targets"}
+          </button>
+        </OfflineTooltip>
         <button onClick={handleReset}
           className="px-5 py-2.5 border border-outline-variant/20 text-sm font-semibold text-on-surface-variant rounded-xl hover:bg-surface-container-high hover:text-on-surface transition-colors">
           Reset to Defaults

@@ -3,6 +3,7 @@
  */
 import { useState, useEffect } from "react";
 import { fetchSyncStatus, triggerFullSync } from "../../api/client";
+import OfflineTooltip from "../Shared/OfflineTooltip";
 
 const REFRESH_OPTIONS = [
   { value: 0, label: "Off" },
@@ -69,16 +70,20 @@ export default function DataSettings({ onRefresh }) {
       </div>
 
       <div className="flex items-center gap-3">
-        <button onClick={handleFullSync} disabled={syncing}
-          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-primary to-primary-container text-on-primary-container rounded-xl text-sm font-semibold disabled:opacity-50">
-          <span className={`material-symbols-outlined text-base ${syncing ? "animate-spin" : ""}`}>sync</span>
-          {syncing ? "Syncing..." : "Force Full Sync"}
-        </button>
-        <button onClick={onRefresh}
-          className="flex items-center gap-2 px-5 py-2.5 border border-outline-variant/20 text-sm font-semibold text-on-surface-variant rounded-xl hover:bg-surface-container-high hover:text-on-surface transition-colors">
-          <span className="material-symbols-outlined text-base">refresh</span>
-          Refresh Dashboard
-        </button>
+        <OfflineTooltip message="Backend paused — sync unavailable.">
+          <button onClick={handleFullSync} disabled={syncing}
+            className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-primary to-primary-container text-on-primary-container rounded-xl text-sm font-semibold disabled:opacity-50">
+            <span className={`material-symbols-outlined text-base ${syncing ? "animate-spin" : ""}`}>sync</span>
+            {syncing ? "Syncing..." : "Force Full Sync"}
+          </button>
+        </OfflineTooltip>
+        <OfflineTooltip message="Backend paused — refresh unavailable.">
+          <button onClick={onRefresh}
+            className="flex items-center gap-2 px-5 py-2.5 border border-outline-variant/20 text-sm font-semibold text-on-surface-variant rounded-xl hover:bg-surface-container-high hover:text-on-surface transition-colors">
+            <span className="material-symbols-outlined text-base">refresh</span>
+            Refresh Dashboard
+          </button>
+        </OfflineTooltip>
       </div>
       {syncMsg && <p className="text-xs text-on-surface-variant">{syncMsg}</p>}
     </div>

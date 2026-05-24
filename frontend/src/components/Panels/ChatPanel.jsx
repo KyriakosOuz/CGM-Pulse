@@ -7,6 +7,7 @@
  *   chat: { messages, isLoading, sendMessage, pendingPrefill, clearPrefill } — from useChat hook
  */
 import { useRef, useEffect, useState } from "react";
+import OfflineTooltip from "../Shared/OfflineTooltip";
 
 const SUGGESTION_POOL = [
   "Which APJ campaigns are hitting all targets?",
@@ -155,16 +156,17 @@ export default function ChatPanel({ isOpen, onClose, chat }) {
         {messages.length === 0 && (
           <div className="flex flex-wrap gap-2 px-6 pt-4 pb-2">
             {suggestions.map((s) => (
-              <button
-                key={s}
-                onClick={() => {
-                  sendMessage(s);
-                  setInput("");
-                }}
-                className="px-3 py-1.5 rounded-full border border-outline-variant/30 text-[11px] text-on-surface-variant hover:bg-primary/10 hover:border-primary/50 transition-all text-left"
-              >
-                {s}
-              </button>
+              <OfflineTooltip key={s} message="Backend paused — chat unavailable.">
+                <button
+                  onClick={() => {
+                    sendMessage(s);
+                    setInput("");
+                  }}
+                  className="px-3 py-1.5 rounded-full border border-outline-variant/30 text-[11px] text-on-surface-variant hover:bg-primary/10 hover:border-primary/50 transition-all text-left"
+                >
+                  {s}
+                </button>
+              </OfflineTooltip>
             ))}
           </div>
         )}
@@ -234,13 +236,15 @@ export default function ChatPanel({ isOpen, onClose, chat }) {
               className="w-full bg-surface-container-high border-none rounded-full py-3 pl-5 pr-12 text-sm focus:ring-1 focus:ring-primary placeholder:text-outline-variant"
               placeholder="Type your question..."
             />
-            <button
-              onClick={handleSend}
-              disabled={!input.trim() || isLoading}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-on-primary shadow-lg disabled:opacity-50"
-            >
-              <span className="material-symbols-outlined text-sm">send</span>
-            </button>
+            <OfflineTooltip message="Backend paused — chat unavailable.">
+              <button
+                onClick={handleSend}
+                disabled={!input.trim() || isLoading}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-on-primary shadow-lg disabled:opacity-50"
+              >
+                <span className="material-symbols-outlined text-sm">send</span>
+              </button>
+            </OfflineTooltip>
           </div>
           <p className="text-center text-[10px] text-outline uppercase tracking-widest flex items-center justify-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-tertiary"></span>

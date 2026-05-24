@@ -9,6 +9,7 @@
  */
 import { Link } from "react-router-dom";
 import Logo from "../Shared/Logo";
+import OfflineTooltip from "../Shared/OfflineTooltip";
 import { invalidateCache } from "../../api/client";
 
 function formatDate(str) {
@@ -84,13 +85,15 @@ export default function Header({ data, onGenerateReport, onRefresh, campaigns = 
               ? formatDate(data.account_summary.date_to)
               : "Loading..."}
           </p>
-          <button
-            onClick={handleRefresh}
-            className="text-[11px] text-primary hover:text-primary-fixed-dim transition-colors flex items-center gap-1"
-          >
-            <span className="material-symbols-outlined text-[12px]">refresh</span>
-            Refresh
-          </button>
+          <OfflineTooltip message="Backend paused — refresh unavailable.">
+            <button
+              onClick={handleRefresh}
+              className="text-[11px] text-primary hover:text-primary-fixed-dim transition-colors flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-[12px]">refresh</span>
+              Refresh
+            </button>
+          </OfflineTooltip>
         </div>
 
         <button
@@ -100,13 +103,15 @@ export default function Header({ data, onGenerateReport, onRefresh, campaigns = 
           Export
         </button>
 
-        <button
-          onClick={onGenerateReport}
-          className="px-6 py-2 rounded-md bg-gradient-to-br from-primary to-primary-container text-on-primary-container font-semibold shadow-lg shadow-primary/20 hover:opacity-90 transition-all flex items-center gap-2 text-sm"
-        >
-          <span className="material-symbols-outlined text-base">auto_awesome</span>
-          <span className="hidden md:inline">Generate AI Report</span>
-        </button>
+        <OfflineTooltip message="Backend paused — AI report unavailable.">
+          <button
+            onClick={onGenerateReport}
+            className="px-6 py-2 rounded-md bg-gradient-to-br from-primary to-primary-container text-on-primary-container font-semibold shadow-lg shadow-primary/20 hover:opacity-90 transition-all flex items-center gap-2 text-sm"
+          >
+            <span className="material-symbols-outlined text-base">auto_awesome</span>
+            <span className="hidden md:inline">Generate AI Report</span>
+          </button>
+        </OfflineTooltip>
       </div>
     </header>
   );

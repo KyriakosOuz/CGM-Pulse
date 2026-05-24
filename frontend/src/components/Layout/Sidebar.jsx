@@ -7,6 +7,7 @@
  *   onOpenReport: () => void
  */
 import { NavLink } from "react-router-dom";
+import OfflineTooltip from "../Shared/OfflineTooltip";
 
 const NAV_ITEMS = [
   { to: "/", icon: "dashboard", label: "Dashboard" },
@@ -51,22 +52,26 @@ export default function Sidebar({ onOpenChat, onOpenReport }) {
 
       {/* Bottom actions */}
       <div className="flex flex-col items-center gap-2 mt-auto">
-        <button
-          onClick={onOpenReport}
-          className="w-14 h-14 flex flex-col items-center justify-center gap-1 rounded-xl text-primary hover:bg-primary/10 transition-colors"
-          title="AI Report"
-        >
-          <span className="material-symbols-outlined text-2xl">auto_awesome</span>
-          <span className="text-[9px] tracking-tight font-medium uppercase mt-1 leading-none">Report</span>
-        </button>
-        <button
-          onClick={onOpenChat}
-          className="w-14 h-14 flex flex-col items-center justify-center gap-1 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
-          title="Chat"
-        >
-          <span className="material-symbols-outlined text-2xl">chat_bubble_outline</span>
-          <span className="text-[9px] tracking-tight font-medium uppercase mt-1 leading-none">Ask AI</span>
-        </button>
+        <OfflineTooltip message="Backend paused — AI report unavailable.">
+          <button
+            onClick={onOpenReport}
+            className="w-14 h-14 flex flex-col items-center justify-center gap-1 rounded-xl text-primary hover:bg-primary/10 transition-colors"
+            title="AI Report"
+          >
+            <span className="material-symbols-outlined text-2xl">auto_awesome</span>
+            <span className="text-[9px] tracking-tight font-medium uppercase mt-1 leading-none">Report</span>
+          </button>
+        </OfflineTooltip>
+        <OfflineTooltip message="Backend paused — chat unavailable.">
+          <button
+            onClick={onOpenChat}
+            className="w-14 h-14 flex flex-col items-center justify-center gap-1 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
+            title="Chat"
+          >
+            <span className="material-symbols-outlined text-2xl">chat_bubble_outline</span>
+            <span className="text-[9px] tracking-tight font-medium uppercase mt-1 leading-none">Ask AI</span>
+          </button>
+        </OfflineTooltip>
       </div>
     </aside>
   );

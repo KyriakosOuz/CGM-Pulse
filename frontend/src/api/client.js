@@ -3,11 +3,30 @@
  * Base URL is set from VITE_API_URL environment variable.
  */
 import axios from "axios";
+import { setBackendStatus } from "./backendStatus";
+
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000",
+  baseURL: BASE_URL,
   timeout: 30000,
 });
+
+// Mirror reachability into the global backend-status store so the
+// BackendStatusBanner / OfflineTooltip wrappers can react.
+api.interceptors.response.use(
+  (res) => {
+    setBackendStatus("online");
+    return res;
+  },
+  (err) => {
+    // No `response` means the request never reached the server (network error,
+    // DNS, CORS preflight failure, timeout). Treat that as offline.
+    if (!err.response) setBackendStatus("offline");
+    else setBackendStatus("online");
+    return Promise.reject(err);
+  }
+);
 
 /**
  * Fetch all campaigns with KPI data.
@@ -41,10 +60,17 @@ export async function fetchCampaignHistory(name) {
  * @returns {Promise<Response>}
  */
 export async function startReportStream() {
-  return fetch(`${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/report`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-  });
+  try {
+    const res = await fetch(`${BASE_URL}/api/report`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
+    setBackendStatus(res.ok ? "online" : res.status >= 500 ? "offline" : "online");
+    return res;
+  } catch (e) {
+    setBackendStatus("offline");
+    throw e;
+  }
 }
 
 /**
@@ -54,11 +80,18 @@ export async function startReportStream() {
  * @returns {Promise<Response>}
  */
 export async function startChatStream(question, history = []) {
-  return fetch(`${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/chat`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question, history }),
-  });
+  try {
+    const res = await fetch(`${BASE_URL}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question, history }),
+    });
+    setBackendStatus(res.ok ? "online" : res.status >= 500 ? "offline" : "online");
+    return res;
+  } catch (e) {
+    setBackendStatus("offline");
+    throw e;
+  }
 }
 
 /**

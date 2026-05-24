@@ -17,6 +17,8 @@ import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import DocsPage from "./pages/DocsPage";
 import Logo from "./components/Shared/Logo";
+import BackendStatusBanner from "./components/Shared/BackendStatusBanner";
+import OfflineTooltip from "./components/Shared/OfflineTooltip";
 import { useCampaigns } from "./hooks/useCampaigns";
 import { useReport } from "./hooks/useReport";
 import { useChat } from "./hooks/useChat";
@@ -40,6 +42,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="dark min-h-screen bg-background text-on-surface">
+
+        <BackendStatusBanner />
 
         {/* Desktop sidebar */}
         <div className="hidden lg:block">
@@ -65,18 +69,24 @@ export default function App() {
             <Logo size="md" />
           </Link>
           <div className="flex gap-2">
-            <button
-              onClick={handleOpenReport}
-              className="w-9 h-9 flex items-center justify-center text-primary"
-            >
-              <span className="material-symbols-outlined">auto_awesome</span>
-            </button>
-            <button
-              onClick={() => handleOpenChat()}
-              className="w-9 h-9 flex items-center justify-center text-primary"
-            >
-              <span className="material-symbols-outlined">chat_bubble_outline</span>
-            </button>
+            <OfflineTooltip message="Backend paused — AI report unavailable.">
+              <button
+                onClick={handleOpenReport}
+                className="w-9 h-9 flex items-center justify-center text-primary"
+                title="AI Report"
+              >
+                <span className="material-symbols-outlined">auto_awesome</span>
+              </button>
+            </OfflineTooltip>
+            <OfflineTooltip message="Backend paused — chat unavailable.">
+              <button
+                onClick={() => handleOpenChat()}
+                className="w-9 h-9 flex items-center justify-center text-primary"
+                title="Chat"
+              >
+                <span className="material-symbols-outlined">chat_bubble_outline</span>
+              </button>
+            </OfflineTooltip>
           </div>
         </div>
 

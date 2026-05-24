@@ -8,6 +8,7 @@
  *   report: { reportText, isLoading, generatedAt, generate, restoreLastReport, hasReport }
  */
 import { useState, useEffect } from "react";
+import OfflineTooltip from "../Shared/OfflineTooltip";
 
 function renderReport(text) {
   if (!text) return "";
@@ -204,16 +205,18 @@ export default function AIReportPanel({ isOpen, onClose, report }) {
         </div>
 
         <footer className="p-6 border-t border-white/10 space-y-3">
-          <button
-            onClick={generate}
-            disabled={isLoading}
-            className="w-full py-3 bg-gradient-to-br from-primary to-primary-container text-on-primary-container font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 transition-opacity"
-          >
-            <span className="material-symbols-outlined text-sm">
-              {isLoading ? "hourglass_empty" : hasReport ? "refresh" : "auto_awesome"}
-            </span>
-            {isLoading ? "Generating..." : hasReport ? "Regenerate Report" : "Generate AI Report"}
-          </button>
+          <OfflineTooltip message="Backend paused — report generation unavailable.">
+            <button
+              onClick={generate}
+              disabled={isLoading}
+              className="w-full py-3 bg-gradient-to-br from-primary to-primary-container text-on-primary-container font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 transition-opacity"
+            >
+              <span className="material-symbols-outlined text-sm">
+                {isLoading ? "hourglass_empty" : hasReport ? "refresh" : "auto_awesome"}
+              </span>
+              {isLoading ? "Generating..." : hasReport ? "Regenerate Report" : "Generate AI Report"}
+            </button>
+          </OfflineTooltip>
           <button
             onClick={handleExportPDF}
             disabled={!reportText}

@@ -3,6 +3,7 @@
  */
 import { useState, useEffect } from "react";
 import { fetchAlertConfig, saveAlertConfig, testAlert } from "../../api/client";
+import OfflineTooltip from "../Shared/OfflineTooltip";
 
 function buildTriggerOptions(targets) {
   return [
@@ -140,14 +141,18 @@ export default function AlertConfig({ targets = {} }) {
       </div>
 
       <div className="flex items-center gap-3 pt-2">
-        <button onClick={handleSave} disabled={saving}
-          className="px-5 py-2.5 bg-gradient-to-br from-primary to-primary-container text-on-primary-container rounded-xl text-sm font-semibold disabled:opacity-50 transition-opacity">
-          {saving ? "Saving..." : "Save Config"}
-        </button>
-        <button onClick={handleTest} disabled={testing}
-          className="px-5 py-2.5 border border-outline-variant/20 text-sm font-semibold text-on-surface rounded-xl hover:bg-surface-container-high transition-colors disabled:opacity-50">
-          {testing ? "Sending..." : "Send Test Alert"}
-        </button>
+        <OfflineTooltip message="Backend paused — saving config unavailable.">
+          <button onClick={handleSave} disabled={saving}
+            className="px-5 py-2.5 bg-gradient-to-br from-primary to-primary-container text-on-primary-container rounded-xl text-sm font-semibold disabled:opacity-50 transition-opacity">
+            {saving ? "Saving..." : "Save Config"}
+          </button>
+        </OfflineTooltip>
+        <OfflineTooltip message="Backend paused — test alerts unavailable.">
+          <button onClick={handleTest} disabled={testing}
+            className="px-5 py-2.5 border border-outline-variant/20 text-sm font-semibold text-on-surface rounded-xl hover:bg-surface-container-high transition-colors disabled:opacity-50">
+            {testing ? "Sending..." : "Send Test Alert"}
+          </button>
+        </OfflineTooltip>
       </div>
       {saveMsg && <p className="text-xs text-tertiary">{saveMsg}</p>}
       {testMsg && <p className="text-xs text-on-surface-variant">{testMsg}</p>}
